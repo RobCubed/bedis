@@ -6,8 +6,8 @@ import db_sqlite
 import times
 
 let db = open("bedis.db", "", "", "")
+db.exec(sql"PRAGMA journal_mode=WAL")
 db.exec(sql"""
-PRAGMA journal_mode=WAL;
 create table if not exists bedis
 (
     db     INTEGER default 0,
@@ -17,10 +17,12 @@ create table if not exists bedis
     constraint bedis_pk
         primary key (db, key)
 );
-
+""")
+db.exec(sql"""
 create index bedis_expiry_index
     on bedis (expiry);
 """)
+
 
 proc remove[T](s: var seq[T], ind: int): T {.inline.} =
     result = s[ind]
